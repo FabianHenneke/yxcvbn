@@ -1,15 +1,12 @@
-#!/usr/bin/python
+#!/usr/bin/env/ python3
 
 import sys
 import os
 import re
-import codecs
 import operator
 import datetime
 import nltk
 import warnings
-
-from unidecode import unidecode
 
 def usage():
     print('''
@@ -53,8 +50,8 @@ Then run:
 SENTENCES_PER_BATCH = 500000 # after each batch, delete all counts with count == 1 (hapax legomena)
 PRE_SORT_CUTOFF = 300        # before sorting, discard all words with less than this count
 
-ALL_NON_ALPHA = re.compile(r'^[\W\d]*$', re.UNICODE)
-SOME_NON_ALPHA = re.compile(r'[\W\d]', re.UNICODE)
+ALL_NON_ALPHA = re.compile(r'^[\W\d]*$')
+SOME_NON_ALPHA = re.compile(r'[\W\d]')
 
 class TopTokenCounter(object):
     def __init__(self):
@@ -136,7 +133,7 @@ def main(input_dir_str, output_filename):
             continue
         for fname in files:
             path = os.path.join(root, fname)
-            for line in codecs.open(path, 'r', 'utf8'):
+            for line in open(path, 'r', encoding = 'utf8'):
                 tokens = nltk.word_tokenize(line)
                 counter.add_tokens(tokens)
                 lines += 1
@@ -153,7 +150,7 @@ def main(input_dir_str, output_filename):
     sorted_pairs = counter.get_sorted_pairs()
     print(counter.get_ts(), 'done')
     print('writing...')
-    with codecs.open(output_filename, 'w', 'utf8') as f:
+    with open(output_filename, 'w', encoding='utf8') as f:
         for token, count in sorted_pairs:
             f.write('%-18s %d\n' % (token, count))
     sys.exit(0)

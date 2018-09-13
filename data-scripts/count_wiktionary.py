@@ -1,11 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 import os
 import sys
-import codecs
 import operator
-
-from unidecode import unidecode
 
 def usage():
     return '''
@@ -59,22 +56,22 @@ def parse_wiki_tokens(html_doc_str):
     return results
 
 def normalize(token):
-    return unidecode(token).lower()
+    return token.lower()
 
 def main(wiktionary_html_root, output_filename):
     rank_token_count = [] # list of 3-tuples
     for filename in os.listdir(wiktionary_html_root):
         path = os.path.join(wiktionary_html_root, filename)
-        with codecs.open(path, 'r', 'utf8') as f:
+        with open(path, 'r', encoding='utf8') as f:
             rank_token_count.extend(parse_wiki_tokens(f.read()))
     rank_token_count.sort(key=operator.itemgetter(0))
-    with codecs.open(output_filename, 'w', 'utf8') as f:
+    with open(output_filename, 'w', encoding='utf8') as f:
         for rank, token, count in rank_token_count:
             f.write('%-18s %d\n' % (token, count))
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
-        print usage()
+        print(usage())
     else:
         main(*sys.argv[1:])
     sys.exit(0)
