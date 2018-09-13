@@ -81,15 +81,12 @@ def normalize(token):
 
 def main(nam_dict, output_filename):
     name_freq = [] # list of pairs
-    with open(nam_dict, 'r', encoding='latin_1') as f:
-        line = ' '
-        while line:
-            line = f.readline()
-            if (skip_line(line)):
-                continue
-            names = normalize(extract_name(line))
-            freq = extract_freq(line)
-            name_freq.extend([(name, freq) for name in names])
+    for line in open(nam_dict, 'r', encoding='latin_1'):
+        if (skip_line(line)):
+            continue
+        names = normalize(extract_name(line))
+        freq = extract_freq(line)
+        name_freq.extend([(name, freq) for name in names])
     name_freq.sort(key=operator.itemgetter(1), reverse=True)
     with open(output_filename, 'w', encoding='utf8') as f:
         prev_name = ''
